@@ -55,7 +55,7 @@ SELECT UPPER(nombre),precio FROM producto;
 -- Lista los nombres y precios de todos los productos de la tabla "producto", convirtiendo los nombres a minúscula.
 SELECT LOWER(nombre),precio FROM producto;
 -- Lista el nombre de todos los fabricantes en una columna, y en otra columna obtenga en mayúsculas los dos primeros caracteres del nombre del fabricante.
-SELECT nombre,LEFT(nombre, 2) FROM fabricante;
+SELECT nombre,UPPER(LEFT(nombre, 2)) FROM fabricante;
 -- Lista los nombres y precios de todos los productos de la tabla "producto", redondeando el valor del precio.
 SELECT nombre,ROUND(precio,1) AS precio_redondeado FROM producto;
 -- Lista los nombres y precios de todos los productos de la tabla "producto", truncando el valor del precio para mostrarlo sin ninguna cifra decimal.
