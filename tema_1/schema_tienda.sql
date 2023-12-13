@@ -100,11 +100,12 @@ WHERE  f.nombre = 'Asus' OR f.nombre = 'Hewlett-Packard' OR f.nombre = 'Seagate'
 -- 29 Devuelve un listado con todos los productos de los fabricantes Asus, Hewlett-Packard y Seagate. Usando el operador IN.
 SELECT p.* FROM fabricante f RIGHT JOIN  producto p  ON f.codigo = p.codigo_fabricante  WHERE f.nombre IN  ('Asus', 'Hewlett-Packard', 'Seagate');
 -- 30 Devuelve un listado con el nombre y el precio de todos los productos de los fabricantes cuyo nombre acabe por la vocal e.
-SELECT p.* FROM fabricante f RIGHT JOIN  producto p  ON f.codigo = p.codigo_fabricante WHERE f.nombre  like '%s';
+SELECT p.* FROM fabricante f RIGHT JOIN  producto p  ON f.codigo = p.codigo_fabricante WHERE f.nombre  like '%e';
 -- 31 Devuelve un listado con el nombre y precio de todos los productos de cuyos fabricantes contenga el carácter w en su nombre.
 SELECT p.* FROM fabricante f RIGHT JOIN  producto p  ON f.codigo = p.codigo_fabricante WHERE f.nombre  like '%w%';
--- 32 Devuelve un listado con el nombre de producto, precio y nombre de fabricante, de todos los productos que tengan un precio mayor o igual a 180€. Ordena el resultado, en primer lugar, por el precio (en orden descendente) y, en segundo lugar, por el nombre (en orden ascendente).
-SELECT p.nombre, p.precio, f.nombre  FROM fabricante f RIGHT JOIN  producto p  ON f.codigo = p.codigo_fabricante  WHERE  p.precio = ( SELECT MIN(precio) FROM producto );
+-- 32 Devuelve un listado con el nombre de producto, precio y nombre de fabricante, de todos los productos que tengan un precio mayor o igual a 180€. 
+--Ordena el resultado, en primer lugar, por el precio (en orden descendente) y, en segundo lugar, por el nombre (en orden ascendente).
+SELECT p.nombre, p.precio, f.nombre  FROM fabricante f RIGHT JOIN  producto p  ON f.codigo = p.codigo_fabricante  WHERE  p.precio >= 180 ORDER BY p.precio DESC, p.nombre ASC;
 -- 33 Devuelve un listado con el código y el nombre de fabricante, sólo de aquellos fabricantes que tienen productos asociados en la base de datos.
 SELECT DISTINCT f.codigo, f.nombre FROM fabricante f JOIN  producto p  ON f.codigo = p.codigo_fabricante;
 -- 34 Devuelve un listado de todos los fabricantes que existen en la base de datos, junto con los productos que tiene cada uno de ellos. El listado deberá mostrar también a aquellos fabricantes que no tienen productos asociados.
