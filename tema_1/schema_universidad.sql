@@ -266,73 +266,75 @@ INSERT INTO alumno_se_matricula_asignatura VALUES (19, 10, 5);
 Por favor, descarga la base de datos del archivo schema_universidad.sql, visualiza el diagrama ER en un editor y efectúa las siguientes consultas:
 */
 USE universidad;
--- Devuelve un listado con el primer apellido, segundo apellido y el nombre de todos los alumnos/as. El listado deberá estar ordenado alfabéticamente de menor a mayor por el primer apellido, segundo apellido y nombre.
+-- 1 Devuelve un listado con el primer apellido, segundo apellido y el nombre de todos los alumnos/as. El listado deberá estar ordenado alfabéticamente de menor a mayor por el primer apellido, segundo apellido y nombre.
 SELECT apellido1,apellido2,nombre,tipo FROM persona WHERE tipo = 'alumno' ORDER BY apellido1,apellido2,nombre ASC;
--- Averigua el nombre y los dos apellidos de los alumnos que no han dado de alta su número de teléfono en la base de datos.
+-- 2 Averigua el nombre y los dos apellidos de los alumnos que no han dado de alta su número de teléfono en la base de datos.
 SELECT apellido1,apellido2,nombre,telefono FROM persona WHERE tipo = 'alumno' AND telefono IS NULL;
--- Devuelve el listado de los alumnos/as que nacieron en 1999.
+-- 3 Devuelve el listado de los alumnos/as que nacieron en 1999.
 SELECT * FROM persona WHERE tipo = 'alumno' AND  year(fecha_nacimiento) = 1999;
--- Devuelve el listado de profesores/as que no han dado de alta su número de teléfono en la base de datos y además su NIF termina en K.
+-- 4 Devuelve el listado de profesores/as que no han dado de alta su número de teléfono en la base de datos y además su NIF termina en K.
 SELECT * FROM persona WHERE tipo = 'profesor' AND  nif like '%K' AND telefono IS NULL;
--- Devuelve el listado de las asignaturas que se imparten en el primer cuatrimestre, en el tercer curso del grado que tiene el identificador 7.
+-- 5 Devuelve el listado de las asignaturas que se imparten en el primer cuatrimestre, en el tercer curso del grado que tiene el identificador 7.
 SELECT * FROM asignatura WHERE cuatrimestre = 1 AND curso = 3 AND id_grado = 7;
-/* Devuelve un listado de los profesores/as junto con el nombre del departamento al que están vinculados/as. 
+/* 6 Devuelve un listado de los profesores/as junto con el nombre del departamento al que están vinculados/as. 
 El listado debe devolver cuatro columnas, primer apellido, segundo apellido, nombre y nombre del departamento. 
 El resultado estará ordenado alfabéticamente de menor a mayor por apellidos y nombre.
 */
 SELECT prof.apellido1, prof.apellido2, prof.nombre, d.nombre FROM persona AS prof  JOIN profesor AS proftable ON proftable.id_profesor = prof.id JOIN departamento as d ON d.id = proftable.id_departamento;
--- Devuelve un listado con el nombre de las asignaturas, año de inicio y año de fin del curso escolar del alumno/a con NIF 26902806M.
+-- 7 Devuelve un listado con el nombre de las asignaturas, año de inicio y año de fin del curso escolar del alumno/a con NIF 26902806M.
 SELECT a.nombre,curso_escolar.anyo_inicio, curso_escolar.anyo_fin FROM asignatura  AS a JOIN alumno_se_matricula_asignatura AS alpivot ON alpivot.id_asignatura = a.id JOIN curso_escolar ON curso_escolar.id=alpivot.id_curso_escolar JOIN persona as p ON p.id = alpivot.id_alumno WHERE p.nif = '26902806M'
 
-/*Devuelve un listado con el nombre de todos los departamentos que tienen profesores/as que imparten alguna asignatura 
+/* 8 Devuelve un listado con el nombre de todos los departamentos que tienen profesores/as que imparten alguna asignatura 
 en el Grado en Ingeniería Informática (Plan 2015).*/
 SELECT DISTINCT d.nombre FROM departamento AS d JOIN profesor AS proftable ON proftable.id_departamento = d.id JOIN asignatura as a on proftable.id_profesor = a.id_profesor WHERE a.id_profesor is NOT NULL AND  a.id_grado = (SELECT id FROM grado WHERE nombre = 'Grado en Ingeniería Informática (Plan 2015)');
--- Devuelve un listado con todos los alumnos/as que se han matriculado en alguna asignatura durante el curso escolar 2018/2019.
+-- 9 Devuelve un listado con todos los alumnos/as que se han matriculado en alguna asignatura durante el curso escolar 2018/2019.
 SELECT * FROM persona JOIN alumno_se_matricula_asignatura as a on persona.id = a.id_alumno WHERE tipo = 'alumno' AND id_curso_escolar = (SELECT DISTINCT id FROM curso_escolar WHERE anyo_inicio = 2018);
 
 /* Resuelve las 6 siguientes consultas utilizando las cláusulas LEFT JOIN y RIGHT JOIN.*/
 
-/* Devuelve un listado con los nombres de todos los profesores/as y los departamentos que tienen vinculados/as. 
+/* 1 Devuelve un listado con los nombres de todos los profesores/as y los departamentos que tienen vinculados/as. 
 El listado también debe mostrar aquellos profesores/as que no tienen ningún departamento asociado. 
 El listado debe devolver cuatro columnas, nombre del departamento, primer apellido, segundo apellido y nombre del profesor/a. 
 El resultado estará ordenado alfabéticamente de menor a mayor por el nombre del departamento, apellidos y nombre.*/
 SELECT d.nombre, prof.apellido1,  prof.apellido2, prof.nombre  FROM  persona AS prof  LEFT JOIN profesor AS proftable ON proftable.id_profesor = prof.id JOIN departamento as d ON prof.id = proftable.id_profesor WHERE tipo = 'profesor' ORDER BY d.nombre, prof.apellido1,  prof.apellido2, prof.nombre ASC;
 
--- Devuelve un listado con los profesores/as que no están asociados a un departamento.
+-- 2 Devuelve un listado con los profesores/as que no están asociados a un departamento.
 SELECT * FROM  persona AS prof LEFT JOIN profesor AS proftable ON proftable.id_profesor = prof.id WHERE tipo = 'profesor' AND proftable.id_departamento is NULL;
--- Devuelve un listado con los departamentos que no tienen profesores asociados.
+-- 3 Devuelve un listado con los departamentos que no tienen profesores asociados.
 SELECT * FROM  persona AS prof LEFT JOIN profesor AS proftable ON proftable.id_profesor = prof.id WHERE tipo = 'profesor' AND proftable.id_departamento is NULL;
--- Devuelve un listado con los profesores/as que no imparten ninguna asignatura.
--- Devuelve un listado con las asignaturas que no tienen un profesor/a asignado.
--- Devuelve un listado con todos los departamentos que no han impartido asignaturas en ningún curso escolar.
+-- 4 Devuelve un listado con los profesores/as que no imparten ninguna asignatura.
+-- 5 Devuelve un listado con las asignaturas que no tienen un profesor/a asignado.
+-- 6 Devuelve un listado con todos los departamentos que no han impartido asignaturas en ningún curso escolar.
 
 /*Consultas resumen:*/
 
--- Devuelve el número total de alumnos existentes.
+-- 1 Devuelve el número total de alumnos existentes.
 SELECT COUNT(*) FROM persona WHERE tipo = 'alumno';
--- Calcula cuántos alumnos nacieron en 1999.
+-- 2 Calcula cuántos alumnos nacieron en 1999.
 SELECT COUNT(*) FROM persona WHERE tipo = 'alumno' AND  year(fecha_nacimiento) = 1999;
-/* Calcula cuántos/as profesores/as hay en cada departamento. 
+/* 3 Calcula cuántos/as profesores/as hay en cada departamento. 
 El resultado sólo debe mostrar dos columnas, una con el nombre del departamento y otra con el número de profesores/as que hay en ese departamento. 
 El resultado sólo debe incluir los departamentos que tienen profesores/as asociados y tendrá que estar ordenado de mayor a menor por el número de profesores/as.*/
 SELECT d.nombre, COUNT(profesor.id_departamento) as Number FROM profesor LEFT JOIN departamento AS d ON profesor.id_departamento = d.id  GROUP BY d.nombre ORDER BY Number ASC ;
 /*
-Devuelve un listado con todos los departamentos y el número de profesores/as que hay en cada uno de ellos. 
+ 4 Devuelve un listado con todos los departamentos y el número de profesores/as que hay en cada uno de ellos. 
 Tiene en cuenta que pueden existir departamentos que no tienen profesores/as asociados/as. 
 Estos departamentos también deben aparecer en el listado.*/
 SELECT d.nombre, COUNT(profesor.id_departamento) as Number FROM profesor RIGHT JOIN departamento AS d ON profesor.id_departamento = d.id  GROUP BY d.nombre;
-/*Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno. 
+/* 5 Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno. 
 Tiene en cuenta que pueden existir grados que carecen de asignaturas asociadas. Estos grados también deben aparecer en el listado. 
 El resultado deberá estar ordenado de mayor a menor por el número de asignaturas.*/
 SELECT grado.id, grado.nombre, COUNT(a.id_grado) as Number FROM grado LEFT JOIN asignatura as a ON grado.id = a.id_grado  GROUP BY grado.id ORDER BY Number DESC;
-/* Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno, 
+/* 6 Devuelve un listado con el nombre de todos los grados existentes en la base de datos y el número de asignaturas que tiene cada uno, 
 de los grados que tengan más de 40 asignaturas asociadas*/
 SELECT  grado.nombre, COUNT(a.id_grado) as Number FROM grado LEFT JOIN asignatura as a ON grado.id = a.id_grado  GROUP BY grado.id having Number > 40;
-/* Devuelve un listado que muestre el nombre de los grados y la suma del número total de créditos existentes para cada tipo de asignatura. 
+/* 7 Devuelve un listado que muestre el nombre de los grados y la suma del número total de créditos existentes para cada tipo de asignatura. 
 El resultado debe tener tres columnas: nombre del grado, tipo de asignatura y la suma de los créditos de todas las asignaturas que existen de este tipo.*/
 SELECT grado.id, grado.nombre, SUM(a.creditos) as result FROM grado LEFT JOIN asignatura as a ON grado.id = a.id_grado  GROUP BY grado.id ;
--- Devuelve un listado que muestre cuántos/as alumnos/as se han matriculado de alguna asignatura en cada uno de los cursos escolares. El resultado deberá mostrar dos columnas, una columna con el año de inicio del curso escolar y otra con el número de alumnos/as matriculados/as.
-
--- Devuelve un listado con el número de asignaturas que imparte cada profesor/a. El listado debe tener en cuenta a aquellos profesores/as que no imparten ninguna asignatura. El resultado mostrará cinco columnas: id, nombre, primer apellido, segundo apellido y número de asignaturas. El resultado estará ordenado de mayor a menor por el número de asignaturas.
--- evuelve todos los datos del alumno más joven.
--- Devuelve un listado con los profesores/as que tienen un departamento asociado y que no imparten ninguna asignatura.
+-- 8 Devuelve un listado que muestre cuántos/as alumnos/as se han matriculado de alguna asignatura en cada uno de los cursos escolares. El resultado deberá mostrar dos columnas, una columna con el año de inicio del curso escolar y otra con el número de alumnos/as matriculados/as.
+SELECT grado.id, grado.nombre, SUM(a.creditos) as result FROM grado LEFT JOIN asignatura as a ON grado.id = a.id_grado  GROUP BY grado.id ;
+-- 9 Devuelve un listado con el número de asignaturas que imparte cada profesor/a. El listado debe tener en cuenta a aquellos profesores/as que no imparten ninguna asignatura. El resultado mostrará cinco columnas: id, nombre, primer apellido, segundo apellido y número de asignaturas. El resultado estará ordenado de mayor a menor por el número de asignaturas.
+SELECT p.id, p.apellido1, p.apellido2, p.nombre, COUNT(profesor.id_departamento) as Number FROM profesor LEFT JOIN asignatura AS a ON profesor.id_profesor = a.id_profesor JOIN persona as p on profesor.id_profesor = p.id GROUP BY p.id ORDER BY Number DESC ;
+-- 10 evuelve todos los datos del alumno más joven.
+SELECT * FROM persona WHERE tipo='alumno' ORDER BY fecha_nacimiento DESC LIMIT 1;
+-- 11 Devuelve un listado con los profesores/as que tienen un departamento asociado y que no imparten ninguna asignatura.
