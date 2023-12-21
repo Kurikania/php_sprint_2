@@ -313,8 +313,8 @@ El listado debe devolver cuatro columnas, nombre del departamento, primer apelli
 El resultado estará ordenado alfabéticamente de menor a mayor por el nombre del departamento, apellidos y nombre.
 */
 --1 y 3 no son correctas.
---El listado también debe mostrar aquellos profesores/as que no tienen ningún departamento asociado. Pero el profe no puede no tener departamiento 
-SELECT d.nombre, prof.apellido1,  prof.apellido2, prof.nombre  FROM  persona AS prof  LEFT JOIN profesor AS proftable ON proftable.id_profesor = prof.id JOIN departamento as d ON prof.id = proftable.id_profesor ORDER BY d.nombre, prof.apellido1,  prof.apellido2, prof.nombre ASC;
+--El listado también debe mostrar aquellos profesores/as que no tienen ningún departamento asociado. 
+SELECT DISTINCT d.nombre, prof.apellido1,  prof.apellido2, prof.nombre  FROM  persona AS prof  LEFT JOIN profesor AS proftable ON proftable.id_profesor = prof.id LEFT JOIN departamento as d ON prof.id = proftable.id_profesor WHERE prof.tipo = 'profesor' ORDER BY d.nombre, prof.apellido1,  prof.apellido2, prof.nombre ASC;
 
 -- 2 Devuelve un listado con los profesores/as que no están asociados a un departamento.
 SELECT * FROM  persona AS prof LEFT JOIN profesor AS proftable ON proftable.id_profesor = prof.id WHERE tipo = 'profesor' AND proftable.id_departamento is NULL;
